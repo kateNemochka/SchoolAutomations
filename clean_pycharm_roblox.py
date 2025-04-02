@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 import sys
 import ctypes
 from datetime import datetime
@@ -81,6 +82,19 @@ def delete_roblox_files():
                         log(f"❌ Помилка видалення файлу {full_path}: {e}")
 
 
+def create_cmd_launcher():
+    script_path = os.path.abspath(__file__)
+    python_path = sys.executable
+    cmd_path = os.path.join(os.path.dirname(script_path), "run_clean.cmd")
+
+    content = f'@echo off\n"{python_path}" "{script_path}"\n'
+    with open(cmd_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+    log(f"⚙️ Створено run_clean.cmd: {cmd_path}")
+    return cmd_path
+
+
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     log("🚀 Старт з __main__")
@@ -95,4 +109,4 @@ if __name__ == "__main__":
     log("▶ Запуск скрипта")
     clean_pycharm_projects()
     delete_roblox_files()
-    log("✅ Очищення завершено\n")
+    create_cmd_launcher()
